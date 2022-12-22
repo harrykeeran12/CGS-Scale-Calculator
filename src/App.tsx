@@ -68,9 +68,11 @@ export default function App() {
           </form>
         </div>
         <div className='col'>
+          {OverallGrades.totalNumber == 0 ? <p></p> : 
           <h1>Your overall grade was a <br></br>
           {OverallGrades.totalCGSGrade} = {OverallGrades.totalNumber}
           </h1>
+  }
         </div>
       </div>
     </main >
