@@ -41,61 +41,74 @@ export default function App() {
 
   return (
     <main>
-      <p className='display-3 mb-5'>CGS Calculator</p>
-      <div className='v-stack p-3'>
-        <div className='col'>
-          <form className='h-25 d-flex flex-column gap-2 container-fluid justify-content-center w-50'>
-            <div className="mb-3">
-              <input type="text" className="form-control" placeholder="Add CGS number grades(separate via commas)" onChange={(e) => {
-                let assignmentValues: number[] = (e.target.value.split(',').map((n) => Number.parseInt(n)));
-                if (FormData != undefined) {
-                  setFormData({ "assignments": assignmentValues, "weighting": FormData.weighting });
-                }
+      <p className='display-3 m-5'>CGS Calculator</p>
+      <div className="d-flex flex-row justify-content-center align-items-start container-fluid">
+        <div className='v-stack p-3 w-100'>
+          <div className='col'>
+            <form className='h-25 d-flex flex-column gap-2 container-fluid justify-content-center w-50'>
+              <div className="mb-3">
+                <input type="text" className="form-control" placeholder="Add CGS number grades(separate via commas)" onChange={(e) => {
+                  let assignmentValues: number[] = (e.target.value.split(',').map((n) => Number.parseInt(n)));
+                  if (FormData != undefined) {
+                    setFormData({ "assignments": assignmentValues, "weighting": FormData.weighting });
+                  }
 
-              }}></input>
+                }}></input>
+              </div>
+              <div className="mb-3">
+                <input type="text" className="form-control" placeholder="Add weightings(separate via commas)" onChange={(e) => {
+                  let weightingValues: number[] = (e.target.value.split(',').map((n) => Number.parseFloat(n)));
+                  if (FormData != undefined) {
+                    setFormData({ "assignments": FormData.assignments, "weighting": weightingValues });
+                  }
+                }}></input>
+              </div>
+              <button type="button" className="btn btn-primary" onClick={() => {
+                console.log(calculateTotalGrade(FormData));
+                console.log(mapGrade(calculateTotalGrade(FormData)))
+              }}>Find grade</button>
+            </form>
+          </div>
+          <div className='col'>
+            <div className="d-flex flex-row justify-content-center align-items-center">
+              {OverallGrades.totalNumber == 0 ? <p></p> :
+                <h1>Your overall grade was a <br></br>
+                  {OverallGrades.totalCGSGrade} = {OverallGrades.totalNumber}
+                </h1>
+              }
+
             </div>
-            <div className="mb-3">
-              <input type="text" className="form-control" placeholder="Add weightings(separate via commas)" onChange={(e) => {
-                let weightingValues: number[] = (e.target.value.split(',').map((n) => Number.parseFloat(n)));
-                if (FormData != undefined) {
-                  setFormData({ "assignments": FormData.assignments, "weighting": weightingValues });
-                }
-              }}></input>
-            </div>
-            <button type="button" className="btn btn-primary" onClick={() => {
-              console.log(calculateTotalGrade(FormData));
-              console.log(mapGrade(calculateTotalGrade(FormData)))
-            }}>Find grade</button>
-          </form>
-        </div>
-        <div className='col'>
-          <div className="d-flex flex-row justify-content-center align-items-center">
-            {OverallGrades.totalNumber == 0 ? <p></p> :
-              <h1>Your overall grade was a <br></br>
-                {OverallGrades.totalCGSGrade} = {OverallGrades.totalNumber}
-              </h1>
-            }
-              <table className="table table-striped-columns w-25 h-25 lh-sm">
-                <thead>
-                  <tr>
-                    <th scope="col">CGS Grade</th>
-                    <th scope="col">Numerical Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th></th>
-                    <td></td>
-                  </tr>
-                
-                  
-                </tbody>
-            </table>
+
           </div>
 
         </div>
+        <div className="p-3 d-flex justify-content-center align-items-center">
+          <table className="table table-striped-columns w-25 h-25 lh-sm">
+            <thead>
+              <tr>
+                <th scope="col" className='h6'>Numerical Value </th>
+                <th scope="col" className='h6'>Approximate Percentage(/22) </th>
+                <th scope="col" className='h6 text-muted'>CGS Grade</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.from(CGSMap.entries()).map((entry) => {
+                const [key, value] = entry;
+                return (
+                  <tr>
+                    <th>{key}</th>
+                    <td>{Math.round(Number.parseInt(key) / 22 * 100) + '%'}</td>
+                    <td className='text-muted'>{value}</td>
+                  </tr>)
+              })}
 
+
+
+            </tbody>
+          </table>
+        </div>
       </div>
+      
     </main >
   )
 }
